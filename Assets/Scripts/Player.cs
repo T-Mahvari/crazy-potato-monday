@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using TMPro;
+using System.Security.Cryptography;
 
 public class Player : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class Player : MonoBehaviour
     Animator anim;
     Rigidbody2D rb;
 
-    float moveSpeed = 6;
+    [SerializeField] float moveSpeed = 6;
     int maxHealth = 100;
     int currentHealth;
 
@@ -24,6 +25,10 @@ public class Player : MonoBehaviour
     }
     private void Update()
     {
+        // Only for test
+        if(Input.GetKeyDown(KeyCode.Space))
+            Hit(10);
+        
         if (dead)
         {
             movement = Vector2.zero;
@@ -42,5 +47,22 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         rb.linearVelocity = movement * moveSpeed;
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Check if we collide with an enemy
+
+    }
+    void Hit(int damage)
+    {
+        anim.SetTrigger("hit");
+        currentHealth -= damage;
+        healthText.text = Mathf.Clamp(currentHealth,0,maxHealth).ToString();
+    }
+
+    void Die()
+    {
+        dead = true;
+        // Call GameOVer   
     }
 }
